@@ -41,7 +41,6 @@ client = OpenAI(api_key=API_KEY, http_client=http_client)
 # Model list
 # -------------------------------------------------------------------------
 COMMON_MODELS = [
-    "gpt-5", "gpt-5-pro", "gpt-5-mini", "gpt-5-nano",
     "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano",
     "gpt-4o", "gpt-4o-mini",
     "gpt-4", "gpt-3.5-turbo"
@@ -138,3 +137,4 @@ if st.button("Translate"):
                 st.info("Could not parse numeric similarity score.")
         except Exception as e:
             st.error(f"Model error: {e}")
+
