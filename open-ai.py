@@ -1,24 +1,27 @@
 """
 Semantic Translation Streamlit App (models updated)
 --------------------------------------------------
-- Loads OPENAI_API_KEY from Streamlit secrets
+- Loads OPENAI_API_KEY from Streamlit secrets (fallback to .env for local testing)
 - Model picker includes GPT-5 family, GPT-4.1 family, GPT-4o family, and a Custom option
 - Generic language input (free text for source/target)
 - Semantic translation + similarity check
 """
 
+import os
 import streamlit as st
 from openai import OpenAI
+from dotenv import load_dotenv
 
 # -------------------------------------------------------------------------
-# Load API Key from Streamlit Secrets
+# Load API Key (Streamlit secrets first, then .env for local)
 # -------------------------------------------------------------------------
-API_KEY = st.secrets.get("OPENAI_API_KEY")
+load_dotenv()
+API_KEY = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY"))
 
 st.set_page_config(page_title="Semantic Translator", layout="centered")
 
 if not API_KEY:
-    st.error("Missing API key. Please add `OPENAI_API_KEY` in Streamlit Secrets.")
+    st.error("Missing API key. Please set OPENAI_API_KEY in Streamlit Secrets or .env file.")
     st.stop()
 
 client = OpenAI(api_key=API_KEY)
