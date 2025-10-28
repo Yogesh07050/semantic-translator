@@ -19,6 +19,7 @@ for var in ["HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy
 
 # Now import OpenAI after clearing proxies
 from openai import OpenAI
+import httpx
 
 # -------------------------------------------------------------------------
 # Load API Key from secrets (fallback to .env for local)
@@ -32,8 +33,9 @@ if not API_KEY:
     st.error("Missing API key. Please set OPENAI_API_KEY in Streamlit secrets or .env.")
     st.stop()
 
-# Initialize OpenAI client
-client = OpenAI(api_key=API_KEY)
+# Initialize OpenAI client with explicit httpx client (no proxy)
+http_client = httpx.Client(proxy=None)
+client = OpenAI(api_key=API_KEY, http_client=http_client)
 
 # -------------------------------------------------------------------------
 # Model list
