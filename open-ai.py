@@ -10,7 +10,14 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 
-# Fix: Import directly from the top-level OpenAI module
+# -------------------------------------------------------------------------
+# CRITICAL: Delete proxy env vars BEFORE importing OpenAI
+# -------------------------------------------------------------------------
+for var in ["HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"]:
+    if var in os.environ:
+        del os.environ[var]
+
+# Now import OpenAI after clearing proxies
 from openai import OpenAI
 
 # -------------------------------------------------------------------------
@@ -24,14 +31,6 @@ st.set_page_config(page_title="Semantic Translator", layout="centered")
 if not API_KEY:
     st.error("Missing API key. Please set OPENAI_API_KEY in Streamlit secrets or .env.")
     st.stop()
-
-# -------------------------------------------------------------------------
-# Patch: Disable proxy settings Streamlit may inject
-# -------------------------------------------------------------------------
-# Streamlit Cloud injects proxy-related env vars that confuse httpx/OpenAI
-for var in ["HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY"]:
-    if var in os.environ:
-        del os.environ[var]
 
 # Initialize OpenAI client
 client = OpenAI(api_key=API_KEY)
